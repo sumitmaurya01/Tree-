@@ -1,0 +1,224 @@
+// ticTacToe game
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class game
+{
+private:
+    char g[3][3] = {
+        {'1', '2', '3'},
+        {'4', '5', '6'},
+        {'7', '8', '9'}};
+    string p1, p2;
+    int turn, round;
+    int arr[9] = {0}, index;
+    char ch;
+
+public:
+    game()
+    {
+
+        cout << "ENTER THE NAME OF FIRST PLAYER: " << endl;
+        cin >> p1;
+        cout << "ENTER THE NAME OF SECOND PLAYER: " << endl;
+        cin >> p2;
+        cout << endl
+             << "AS THE FIRST PLAYER \t ☞ " << p1 << " :: WILL BE THE FIRST TO START THE GAME " << endl;
+        turn = 1;
+        round = 1;
+        char start;
+        cout << "\t>  PRESS 1 TO START GAME\n\t>  PRESS ANY KEY TO GO BACK TO MAIN MENU\n"
+             << endl;
+        cin >> start;
+        if (start == '1')
+        {
+            cout << endl
+                 << endl;
+            system("clear");
+            screen();
+        }
+        else
+            game();
+    }
+
+    void chance(int &Turn)
+    {
+    start:
+        if (Turn == 1)
+        {
+            ch = 'X';
+            cout << p1 << " ENTER BLOCK NUMBER(1 - 9): " << endl;
+            cin >> index;
+            if (index < 1 || index > 9)
+            {
+
+                cout << "INVALID !! BLOCK NUMBER  PLEASE ENTER VALID BLOCK NUMBER FROM (1 - 9) " << endl;
+                goto start;
+            }
+        }
+        else
+        {
+            ch = 'O';
+            cout << p2 << " ENTER BLOCK NUMBER(1 - 9): " << endl;
+            cin >> index;
+            if (index < 1 || index > 9)
+            {
+                cout << "INVALID !! BLOCK NUMBER  PLEASE ENTER VALID BLOCK NUMBER FROM (1 - 9) " << endl;
+                goto start;
+            }
+        }
+        if (arr[index - 1])
+        {
+            cout << "THE BLOCK YOU ENTERED IS ALREADY FILLED TRY ANY OTHER BLOCK WHICH IS EMPTY " << endl;
+            goto start;
+        }
+        else
+            fill(index);
+    }
+    void fill(int &Index)
+    {
+        arr[Index - 1] = 1;
+        switch (Index)
+        {
+        case 1:
+        {
+            g[0][0] = ch;
+            break;
+        }
+        case 2:
+        {
+            g[0][1] = ch;
+            break;
+        }
+        case 3:
+        {
+            g[0][2] = ch;
+            break;
+        } // first row ends
+        case 4:
+        {
+            g[1][0] = ch;
+            break;
+        }
+        case 5:
+        {
+            g[1][1] = ch;
+            break;
+        }
+        case 6:
+        {
+            g[1][2] = ch;
+            break;
+        } // 2nd row ends
+        case 7:
+        {
+            g[2][0] = ch;
+            break;
+        }
+        case 8:
+        {
+            g[2][1] = ch;
+            break;
+        }
+        case 9:
+        {
+            g[2][2] = ch;
+            break;
+        }
+        }
+        screen();
+    }
+    bool check()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (((g[i][0] == g[i][1]) && (g[i][0] == g[i][2])) || ((g[0][i] == g[1][i]) && (g[0][i] == g[2][i])) ||
+                /*its for diagonals*/ ((g[0][0] == g[1][1]) && (g[0][0] == g[2][2])) || ((g[0][2] == g[1][1]) && (g[0][2] == g[2][0])))
+            {
+                return true;
+            }
+        } // for loop ends
+        return false;
+    }
+
+    void play()
+    {
+        while (!check() && round < 10)
+        {
+            if (turn == 1)
+            {
+                chance(turn);
+                turn = 2;
+            }
+            else
+            {
+                chance(turn);
+                turn = 1;
+            }
+
+            round++;
+        } // end of while
+
+        if (check())
+        {
+            if (turn == 2)
+            {
+                cout << p1 << " : _ HURRAH !!! YOU WON THE MATCH  ♕ " << endl;
+                cout << p2 << " : BETTER LUCK NEXT TIME " << endl;
+            }
+            else
+            {
+                cout << p2 << " : _ HURRAH !!! YOU WON THE MATCH" << endl;
+                cout << p1 << " : BETTER LUCK NEXT TIME " << endl;
+            }
+        }
+        else
+        {
+            cout << "MATCH TIE" << endl;
+        }
+    }
+    // to display the filings of the blocks
+    void screen()
+    {
+        system("clear");
+        cout << endl
+             << endl;
+        cout << "    |     |     \n";
+        cout << "  " << g[0][0] << " |  " << g[0][1] << "  | " << g[0][2] << endl;
+        cout << "____|_____|____\n";
+        cout << "    |     |     \n";
+        cout << "  " << g[1][0] << " |  " << g[1][1] << "  | " << g[1][2] << endl;
+        cout << "____|_____|____\n";
+        cout << "    |     |     \n";
+        cout << "  " << g[2][0] << " |  " << g[2][1] << "  | " << g[2][2] << endl;
+        cout << "    |     |     \n"
+             << endl
+             << endl
+             << endl;
+    }
+
+}; // class ends
+
+int main()
+{
+    system("clear");
+    cout << "-----------       TIC TAC TOE      ----------" << endl
+         << endl;
+    cout << "------------  WELCOME TO THE GAME  --------------" << endl;
+    cout << "______________________________________________________" << endl
+         << endl;
+    char s;
+    cout << "PRESS 'Y' TO START ▶︎ , AND ANY KEY TO EXIT " << endl;
+    cin >> s;
+recheck:
+    if (s == 'y' || s == 'Y')
+    {
+        game g1;
+        g1.play();
+    }
+    else
+        cout << "SUCCESSFULLY EXITED FROM GAME ";
+
+    return 0;
+}

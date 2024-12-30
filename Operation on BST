@@ -1,0 +1,222 @@
+#include <iostream>
+using namespace std;
+/*
+input this
+10 1 203 8 20 333 5 43 3 25 98 -1
+*/
+class Node
+{
+public:
+    int data;
+    Node *left;
+    Node *right;
+    Node(int d)
+    {
+        this->data = d;
+        this->left = NULL;
+        this->right = NULL;
+    }
+};
+Node *createNode(Node *&root, int data)
+{
+    if (root == NULL)
+    {
+        root = new Node(data);
+        return root;
+    }
+    else if (root->data < data)
+    {
+        root->right = createNode(root->right, data);
+    }
+    else
+    {
+        root->left = createNode(root->left, data);
+    }
+    return root;
+}
+void takeInput(Node *&root)
+{
+    int data;
+    cin >> data;
+    while (data != -1)
+    {
+        root = createNode(root, data);
+        cin >> data;
+    }
+}
+void inorder(Node *root)
+{
+    if (root == NULL)
+        return;
+    inorder(root->left);
+    cout << root->data << " ";
+    inorder(root->right);
+}
+void preorder(Node *root)
+{
+    if (root == NULL)
+        return;
+    cout << root->data << " ";
+    preorder(root->left);
+    preorder(root->right);
+}
+void postorder(Node *root)
+{
+    if (root == NULL)
+        return;
+    postorder(root->left);
+    postorder(root->right);
+    cout << root->data << " ";
+}
+Node *insertNode(Node *&root, int data)
+{
+    if (root == NULL)
+    {
+        Node *temp = new Node(data);
+        return temp;
+    }
+    else if (root->data > data)
+    {
+        root->left = insertNode(root->left, data);
+    }
+    else
+    {
+        root->right = insertNode(root->right, data);
+    }
+    return root;
+}
+ 
+ // deletion of node in BST
+  Node* deleteNode(Node* &root, int val){
+    if(root == NULL){
+        cout<<"Can't find the data in the tree\n";
+        return nullptr;
+    }
+    if(root->data== val){
+       // 0 child
+   
+       if(root->left == NULL && root->right == NULL){
+        delete root;
+        return NULL;
+       }
+       // 1 child
+                    // delete left child
+       else if(root->left != NULL && root->right == NULL){
+                Node* temp=root->left;
+                delete root;
+                return temp;
+       }
+                    // delete right child
+       else if(root->left == NULL && root->right != NULL){
+                Node* temp=root->right;
+                delete root;
+                return temp;
+
+       }
+
+       // 2 child
+       else /* dono child present hai node me */ 
+       {
+             /* 1 cond. find max from left subtree   (inorder predecessor) or 
+                2 cond . find min from right subtree (inorder successor)*/
+                 
+                 // find min from right  subtree 
+
+                   Node* temp=root->right;
+                   while(temp->left ){
+                    temp=temp->left;
+                   }
+                   root->data=temp->data; 
+                   root->right= deleteNode(root->right,root->data);
+
+       }
+    }
+    else if( root->data > val){
+        root->left=deleteNode(root->left, val);
+    }
+    else{
+        root->right=deleteNode(root->right,val);
+    }
+    return root;
+  }
+
+int main()
+{
+
+    Node *root = NULL;
+
+    int choice = -1;
+    while (choice != 0)
+    {
+        cout << "\n <--------------------------------------------------------------->\n";
+        cout << "                        1. To Create a BST  " << endl;
+        cout << "                        2. Insert Node in BST " << endl;
+        cout << "                        3. To Search A val in BST " << endl;
+        cout << "                        4. To Delete a Node in BST " << endl;
+        cout << "                        5. For traversal " << endl;
+        cout << "                        6. To Clear Tree  " << endl;
+        cout << "                         ENTER '0'  TO EXIT " << endl;
+        cout << " <--------------------------------------------------------------->";
+
+        cout << "\nEnter your choice \n";
+        cin >> choice;
+        switch (choice)
+        {
+        case 0:
+        {
+            cout << "SUCCESSFULLY EXITED FROM THE CODE <---->";
+            exit(0);
+        }
+
+        case 1:
+        {
+            cout << "Enter the value of the nodes to be inserted : " << endl;
+            takeInput(root);
+            break;
+        }
+        case 2:
+        {
+            // insert a node
+            int data;
+            cout << "Enter data to be inserted: \n";
+            cin >> data;
+            root = insertNode(root, data);
+            break;
+        }
+        case 3:
+        {
+            // search val in tree
+            break;
+        }
+        case 4:
+        {
+            cout << "Enter the value to be deleted from the tree: " << endl;
+            int val;
+            cin >> val;
+            root = deleteNode(root, val); // to be code
+            break;
+        }
+        case 5:
+        {
+            cout << " INORDER TRAVERSAL \n";
+            if (root == nullptr)
+                cout << " EMPTY TREE \n"
+            else
+                inorder(root);
+            break;
+        }
+        case 6:
+        {
+            root = NULL;
+            cout << "The Tree has been cleared \"NO NODES ARE THERE\" \n";
+            break;
+        }
+        default:
+        {
+            cout << "Invalid choice \n";
+        }
+        }
+    }
+
+    return 0;
+}
